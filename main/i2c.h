@@ -23,7 +23,7 @@ uint8_t i2c_read(i2c_master_dev_handle_t dev, uint8_t data_addr);
 
 
 // i2c scan
-bool i2c_is_good(i2c_master_bus_handle_t i2c_handle);
+bool i2c_precheck(i2c_master_bus_handle_t i2c_handle);
 
 
 #endif

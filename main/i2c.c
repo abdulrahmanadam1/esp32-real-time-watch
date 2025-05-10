@@ -44,7 +44,7 @@ i2c_master_dev_handle_t i2c_device_init(i2c_master_bus_handle_t i2c_handle, uint
     return i2c_dev_handle;
 }
 
-void i2c_write_new(i2c_master_dev_handle_t i2c_dev_handle, uint8_t data_addr, uint8_t data)
+void i2c_write(i2c_master_dev_handle_t i2c_dev_handle, uint8_t data_addr, uint8_t data)
 {
     printf("\n transmitting 0x%02X\n", data);
     uint8_t write_buf[2] = {data_addr, data};
@@ -66,8 +66,10 @@ uint8_t i2c_read(i2c_master_dev_handle_t dev, uint8_t data_addr)
     return val;
 }
 
-bool i2c_is_good(i2c_master_bus_handle_t i2c_handle)
+
+bool i2c_precheck(i2c_master_bus_handle_t i2c_handle)
 {
+
     uint8_t i2c_addrs[NUM_DEVICES] = {0x3C, 0x68, 0x57};
 
     bool is_good = true;
@@ -78,45 +80,20 @@ bool i2c_is_good(i2c_master_bus_handle_t i2c_handle)
         if (ret == ESP_OK)
         {
             ESP_LOGI(TAG, "I2C ADDR 0x%02x is good! %s is up", addr,
-            i == 0 ? "OLED":
-            i == 1 ? "RTC" :
-            i == 2 ? "EEPROM": "DEVICE: 0x%02x"
+            addr == 0x3C ? "OLED":
+            addr == 0x68 ? "RTC" :
+            addr == 0x57 ? "EEPROM": "DEVICE: 0x%02x"
             );
 
         } else {
             ESP_LOGE(TAG, "I2C ADDR 0x%02x timed out! ensure that %s is conected!", addr,
-            i == 0 ? "OLED":
-            i == 1 ? "RTC" :
-            i == 2 ? "EEPROM": "DEVICE: 0x%02x"
+            addr == 0x3C ? "OLED":
+            addr == 0x68 ? "RTC" :
+            addr == 0x57 ? "EEPROM": "DEVICE: 0x%02x"
             );
             is_good = false;
         }
     }
     return is_good;
 }
-
-
-
-
-uint16_t scan_addrs(i2c_master_bus_handle_t i2c_handle)
-{
-    uint16_t first_addr; // first addr that return ACK
-    for (uint16_t addr = 0; addr < 128; addr++) {
-        switch (i2c_master_probe(i2c_handle, addr, -1)) {
-            case ESP_OK:
-                ESP_LOGI(TAG, "%02x: YESS!!!! IS THIS ONE!!", addr);
-                first_addr = addr;
-                break;
-            case ESP_ERR_TIMEOUT:
-                ESP_LOGI(TAG, "%02x: TIMEOUT", addr);
-            default:
-                ESP_LOGI(TAG, "%02x : ---", addr);
-        }
-        break;
-
-    }
-    return first_addr;
-}
-
-
 

@@ -15,13 +15,10 @@ typedef struct {
     int hours;
     int minutes;
     int seconds;
-    bool am_pm;
+    bool am_pm; // AM == TRUE, PM == FALSE
 } rtc_time_t;
 
 
-// i2c_master_dev_handle_t rtc_init(i2c_master_bus_handle_t i2c_handle);
-
-// void get_time(i2c_master_dev_handle_t rtc_handle);
 void set_time(i2c_master_dev_handle_t rtc, rtc_time_t time);
 rtc_time_t get_time(i2c_master_dev_handle_t rtc);
 

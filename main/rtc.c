@@ -19,14 +19,14 @@ void set_time(i2c_master_dev_handle_t rtc, rtc_time_t time)
     uint8_t hrs_bit = (hour % 10) | (hour / 10) << 4;
 
     // set to 12 hr mode for AM/PM
-    hrs_bit |= TWELVE_HOUR_MODE;
+    hrs_bit &= ~TWELVE_HOUR_MODE;
 
     // print out value of registers in RTC module
     ESP_LOGD(TAG, "hours 0x%02x, minutes 0x%02x, seconds 0x%02x", hrs_bit, min_bit, sec_bit);
 
-    i2c_write_new(rtc, SC_REG, sec_bit);
-    i2c_write_new(rtc, MN_REG, min_bit);
-    i2c_write_new(rtc, HR_REG, hrs_bit);
+    i2c_write(rtc, SC_REG, sec_bit);
+    i2c_write(rtc, MN_REG, min_bit);
+    i2c_write(rtc, HR_REG, hrs_bit);
     ESP_LOGI(TAG, "SUCCESSFULLY SET RTC TIME");
 }
 

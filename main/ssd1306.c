@@ -2,28 +2,19 @@
 
 static const char *TAG = "SSD1306";
 
-void print_char(lv_disp_t *disp, const char *c)
+
+void display_time(lv_obj_t *scr, rtc_time_t time)
 {
-    lv_obj_t *scr = lv_disp_get_scr_act(disp);
+    // display RTC time for one second and clears
+
+    // TODO: add AM/PM check from rtc_time obj
     lv_obj_t *label = lv_label_create(scr);
-    lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
-    lv_label_set_text(label, c);
-    // int32_t w = *(disp->driver->hor_res);
-    lv_obj_set_width(label, 128);
-    lv_obj_align(label, LV_ALIGN_OUT_TOP_MID, 0, 0);
+    lv_obj_set_pos(label, 34, 34);
+    lv_obj_set_size(label, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
 
-}
-
-
-void print_time(lv_disp_t *disp, int hour, int minute, int second)
-{
-    lv_obj_t *scr = lv_disp_get_scr_act(disp);
-
-    lv_obj_t *label = lv_label_create(scr);
-    lv_label_set_text_fmt(scr, "%d:%d:%d",hour, minute, second);
-    lv_obj_set_width(label, 128);
-    lv_obj_align(label, LV_ALIGN_BOTTOM_MID, 0, 0);
-
+    lv_label_set_text_fmt(label,"%02d:%02d:%02d", time.hours, time.minutes, time.seconds);
+    vTaskDelay(1000 / portTICK_PERIOD_MS);
+    lv_obj_del(label);
 }
 
 
